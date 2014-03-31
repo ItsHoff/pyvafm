@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['waver',['waver',['../classvafmcircuits__signal__gens_1_1waver.html',1,'vafmcircuits_signal_gens']]]
+  ['vdw',['VDW',['../classvafmcircuits___v_d_w_1_1_v_d_w.html',1,'vafmcircuits_VDW']]]
 ];

@@ -17,5 +17,8 @@ var annotated =
       [ "Scanner", "classvafmcircuits___scanner_1_1_scanner.html", "classvafmcircuits___scanner_1_1_scanner" ]
     ] ],
     [ "vafmcircuits_signal_gens", "namespacevafmcircuits__signal__gens.html", "namespacevafmcircuits__signal__gens" ],
-    [ "vafmcircuits_signal_processing", "namespacevafmcircuits__signal__processing.html", "namespacevafmcircuits__signal__processing" ]
+    [ "vafmcircuits_signal_processing", "namespacevafmcircuits__signal__processing.html", "namespacevafmcircuits__signal__processing" ],
+    [ "vafmcircuits_VDW", null, [
+      [ "VDW", "classvafmcircuits___v_d_w_1_1_v_d_w.html", null ]
+    ] ]
 ];

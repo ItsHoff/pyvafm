@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['xor',['XOR',['../classvafmcircuits___logic_1_1_x_o_r.html',1,'vafmcircuits_Logic']]]
+  ['waver',['waver',['../classvafmcircuits__signal__gens_1_1waver.html',1,'vafmcircuits_signal_gens']]]
 ];

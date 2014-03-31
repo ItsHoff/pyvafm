@@ -15,5 +15,6 @@ var searchData=
   ['vafmcircuits_5fmath',['vafmcircuits_math',['../namespacevafmcircuits__math.html',1,'']]],
   ['vafmcircuits_5foutput',['vafmcircuits_output',['../namespacevafmcircuits__output.html',1,'']]],
   ['vafmcircuits_5fsignal_5fgens',['vafmcircuits_signal_gens',['../namespacevafmcircuits__signal__gens.html',1,'']]],
-  ['vafmcircuits_5fsignal_5fprocessing',['vafmcircuits_signal_processing',['../namespacevafmcircuits__signal__processing.html',1,'']]]
+  ['vafmcircuits_5fsignal_5fprocessing',['vafmcircuits_signal_processing',['../namespacevafmcircuits__signal__processing.html',1,'']]],
+  ['vdw',['VDW',['../classvafmcircuits___v_d_w_1_1_v_d_w.html',1,'vafmcircuits_VDW']]]
 ];

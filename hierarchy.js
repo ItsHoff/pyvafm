@@ -48,7 +48,8 @@ var hierarchy =
       [ "vafmcircuits_signal_processing.limiter", "classvafmcircuits__signal__processing_1_1limiter.html", null ],
       [ "vafmcircuits_signal_processing.minmax", "classvafmcircuits__signal__processing_1_1minmax.html", null ],
       [ "vafmcircuits_signal_processing.peaker", "classvafmcircuits__signal__processing_1_1peaker.html", null ],
-      [ "vafmcircuits_signal_processing.phasor", "classvafmcircuits__signal__processing_1_1phasor.html", null ]
+      [ "vafmcircuits_signal_processing.phasor", "classvafmcircuits__signal__processing_1_1phasor.html", null ],
+      [ "vafmcircuits_VDW.VDW", "classvafmcircuits___v_d_w_1_1_v_d_w.html", null ]
     ] ],
     [ "vafmbase.Feed", "classvafmbase_1_1_feed.html", null ]
 ];
