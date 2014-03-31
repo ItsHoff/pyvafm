@@ -117,87 +117,86 @@ $(document).ready(function(){initNavTree('vafmcircuits___v_d_w_8py_source.html',
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="comment">#</span></div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="comment"># \b Initialisation \b parameters:</span></div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="comment">#             - \a pushed = True|False  push the output buffer immediately if True</span></div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="comment">#</span></div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="comment"># \b Input \b channels: </span></div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="comment">#             - \a gamma  = tip angle</span></div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="comment">#             - \a hamaker =  Hamaker constant</span></div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="comment">#             - \a radius = Tip Radius</span></div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="comment">#             - \a offset = tip offset</span></div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="comment">#</span></div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="comment">#             - \a gamma  = tip angle</span></div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="comment">#             - \a hamaker =  Hamaker constant</span></div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="comment">#             - \a radius = Tip Radius</span></div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="comment">#             - \a offset = tip offset</span></div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="comment">#</span></div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="comment"># \b Input \b channels: </span></div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="comment">#             - \a ztip = z pos of tip</span></div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment"># \b Output \b channels: </span></div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">#             - \a Q =  stored bit (0|1)</span></div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment">#             - \a Qbar =  opposite of the stored bit</span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">#</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">#\b Examples:</span></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"># \code{.py}</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment"># machine.AddCircuit(type=&#39;SRFlipFlop&#39;, name=&#39;sr&#39;)</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment"># \endcode</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">#</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
-<div class="line"><a name="l00031"></a><span class="lineno"><a class="line" href="classvafmcircuits___v_d_w_1_1_v_d_w.html">   31</a></span>&#160;<span class="keyword">class </span><a class="code" href="classvafmcircuits___v_d_w_1_1_v_d_w.html">VDW</a>(<a class="code" href="classvafmbase_1_1_circuit.html">Circuit</a>):</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">#             - \a fz = force </span></div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment">#</span></div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">#\b Examples:</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment"># \code{.py}</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment">#             machine.AddCircuit(type=&#39;VDW&#39;, name=&#39;VDW&#39;, gamma=0.28658 ,hamaker=39.6e-20 ,radius=3.9487, offset=0 , pushed=True)</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment"># \endcode</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">#</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div>
+<div class="line"><a name="l00030"></a><span class="lineno"><a class="line" href="classvafmcircuits___v_d_w_1_1_v_d_w.html">   30</a></span>&#160;<span class="keyword">class </span><a class="code" href="classvafmcircuits___v_d_w_1_1_v_d_w.html">VDW</a>(<a class="code" href="classvafmbase_1_1_circuit.html">Circuit</a>):</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    </div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    </div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    </div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;              <span class="keyword">def </span>__init__(self, machine, name, **keys):</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;                            </div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;                            super(self.__class__, self).__init__( machine, name )</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;                            </div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;                            <span class="keywordflow">if</span> <span class="stringliteral">&#39;gamma&#39;</span> <span class="keywordflow">in</span> keys.keys():</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;                                          alpha = keys[<span class="stringliteral">&#39;alpha&#39;</span>]</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;                                          <span class="keywordflow">print</span> <span class="stringliteral">&quot;alpha = &quot;</span> +str(alpha)</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;                            <span class="keywordflow">else</span>:</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;                                          <span class="keywordflow">raise</span> NameError(<span class="stringliteral">&quot;No alpha entered &quot;</span>)</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;              <span class="keyword">def </span>__init__(self, machine, name, **keys):</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;                            </div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;                            super(self.__class__, self).__init__( machine, name )</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;                            </div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;                            <span class="keywordflow">if</span> <span class="stringliteral">&#39;gamma&#39;</span> <span class="keywordflow">in</span> keys.keys():</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;                                          alpha = keys[<span class="stringliteral">&#39;alpha&#39;</span>]</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;                                          <span class="keywordflow">print</span> <span class="stringliteral">&quot;alpha = &quot;</span> +str(alpha)</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;                            <span class="keywordflow">else</span>:</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;                                          <span class="keywordflow">raise</span> NameError(<span class="stringliteral">&quot;No alpha entered &quot;</span>)</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;                            <span class="keywordflow">if</span> <span class="stringliteral">&#39;hamaker&#39;</span> <span class="keywordflow">in</span> keys.keys():</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;                                          hamaker = keys[<span class="stringliteral">&#39;hamaker&#39;</span>]</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;                                          <span class="keywordflow">print</span> <span class="stringliteral">&quot;hamaker = &quot;</span> +str(hamaker)</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;                            <span class="keywordflow">else</span>:</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;                                          <span class="keywordflow">raise</span> NameError(<span class="stringliteral">&quot;No hamaker entered &quot;</span>)</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;                            <span class="keywordflow">if</span> <span class="stringliteral">&#39;hamaker&#39;</span> <span class="keywordflow">in</span> keys.keys():</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;                                          hamaker = keys[<span class="stringliteral">&#39;hamaker&#39;</span>]</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;                                          <span class="keywordflow">print</span> <span class="stringliteral">&quot;hamaker = &quot;</span> +str(hamaker)</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;                            <span class="keywordflow">else</span>:</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;                                          <span class="keywordflow">raise</span> NameError(<span class="stringliteral">&quot;No hamaker entered &quot;</span>)</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;</div>
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;                            <span class="keywordflow">if</span> <span class="stringliteral">&#39;radius&#39;</span> <span class="keywordflow">in</span> keys.keys():</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;                                          radius = keys[<span class="stringliteral">&#39;radius&#39;</span>]</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;                                          <span class="keywordflow">print</span> <span class="stringliteral">&quot;radius = &quot;</span> +str(radius)</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;                            <span class="keywordflow">else</span>:</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;                                          <span class="keywordflow">raise</span> NameError(<span class="stringliteral">&quot;No radius entered &quot;</span>)                                 </div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;                            <span class="keywordflow">if</span> <span class="stringliteral">&#39;radius&#39;</span> <span class="keywordflow">in</span> keys.keys():</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;                                          radius = keys[<span class="stringliteral">&#39;radius&#39;</span>]</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;                                          <span class="keywordflow">print</span> <span class="stringliteral">&quot;radius = &quot;</span> +str(radius)</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;                            <span class="keywordflow">else</span>:</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;                                          <span class="keywordflow">raise</span> NameError(<span class="stringliteral">&quot;No radius entered &quot;</span>)                                 </div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;</div>
 <div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;                            <span class="keywordflow">if</span> <span class="stringliteral">&#39;offset&#39;</span> <span class="keywordflow">in</span> keys.keys():</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;                                          offset = keys[<span class="stringliteral">&#39;offset&#39;</span>]</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;                                          <span class="keywordflow">print</span> <span class="stringliteral">&quot;offset = &quot;</span> +str(offset)</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;                            <span class="keywordflow">else</span>:</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;                                          <span class="keywordflow">raise</span> NameError(<span class="stringliteral">&quot;No radius entered &quot;</span>)                                 </div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;                            </div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;                            self.<a class="code" href="classvafmbase_1_1_circuit.html#a60c3a2fc29e6ae2172ab8015082079d5">AddInput</a>(<span class="stringliteral">&quot;ztip&quot;</span>)</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;                            self.<a class="code" href="classvafmbase_1_1_circuit.html#a5d0148cfd41ea0e3039afc677b3186ad">AddOutput</a>(<span class="stringliteral">&quot;fz&quot;</span>)</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;                            <span class="keywordflow">if</span> <span class="stringliteral">&#39;offset&#39;</span> <span class="keywordflow">in</span> keys.keys():</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;                                          offset = keys[<span class="stringliteral">&#39;offset&#39;</span>]</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;                                          <span class="keywordflow">print</span> <span class="stringliteral">&quot;offset = &quot;</span> +str(offset)</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;                            <span class="keywordflow">else</span>:</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;                                          <span class="keywordflow">raise</span> NameError(<span class="stringliteral">&quot;No radius entered &quot;</span>)                                 </div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;                            </div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;                            self.<a class="code" href="classvafmbase_1_1_circuit.html#a60c3a2fc29e6ae2172ab8015082079d5">AddInput</a>(<span class="stringliteral">&quot;ztip&quot;</span>)</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;                            self.<a class="code" href="classvafmbase_1_1_circuit.html#a5d0148cfd41ea0e3039afc677b3186ad">AddOutput</a>(<span class="stringliteral">&quot;fz&quot;</span>)</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;</div>
 <div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;                            Circuit.cCore.Add_VDW.argtypes = [</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;                            ctypes.c_int, <span class="comment">#Core Id</span></div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;                            ctypes.c_double, <span class="comment">#alpha</span></div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;                            ctypes.c_double, <span class="comment">#hamaker</span></div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;                            ctypes.c_double, <span class="comment">#radius</span></div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;                            ctypes.c_double] <span class="comment">#offset</span></div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;                            self.<a class="code" href="classvafmbase_1_1_circuit.html#aace6a78be5e897522724dd2ef20007b7">cCoreID</a> = Circuit.cCore.Add_VDW(self.machine.cCoreID,alpha,hamaker,radius,offset)</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;                            Circuit.cCore.Add_VDW.argtypes = [</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;                            ctypes.c_int, <span class="comment">#Core Id</span></div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;                            ctypes.c_double, <span class="comment">#alpha</span></div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;                            ctypes.c_double, <span class="comment">#hamaker</span></div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;                            ctypes.c_double, <span class="comment">#radius</span></div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;                            ctypes.c_double] <span class="comment">#offset</span></div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;                            self.<a class="code" href="classvafmbase_1_1_circuit.html#aace6a78be5e897522724dd2ef20007b7">cCoreID</a> = Circuit.cCore.Add_VDW(self.machine.cCoreID,alpha,hamaker,radius,offset)</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;                            </div>
 <div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;                            </div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;                            </div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;                            self.<a class="code" href="classvafmbase_1_1_circuit.html#ab8ffc3f4428dec41f9e6958a1a16d8c1">SetInputs</a>(**keys)</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;              <span class="keyword">def </span>Initialize (self):</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;                            </div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;                            <span class="keywordflow">pass</span></div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;                            self.<a class="code" href="classvafmbase_1_1_circuit.html#ab8ffc3f4428dec41f9e6958a1a16d8c1">SetInputs</a>(**keys)</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;              <span class="keyword">def </span>Initialize (self):</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;                            </div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;                            <span class="keywordflow">pass</span></div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;                            </div>
 <div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;                            </div>
 <div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;                            </div>
 <div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;                            </div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;                            </div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;              <span class="keyword">def </span>Update (self):</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;                            <span class="keywordflow">pass</span></div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;              <span class="keyword">def </span>Update (self):</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;                            <span class="keywordflow">pass</span></div>
 <div class="ttc" id="classvafmbase_1_1_circuit_html_a5d0148cfd41ea0e3039afc677b3186ad"><div class="ttname"><a href="classvafmbase_1_1_circuit.html#a5d0148cfd41ea0e3039afc677b3186ad">vafmbase.Circuit.AddOutput</a></div><div class="ttdeci">def AddOutput</div><div class="ttdef"><b>Definition:</b> <a href="vafmbase_8py_source.html#l00290">vafmbase.py:290</a></div></div>
 <div class="ttc" id="classvafmbase_1_1_circuit_html_aace6a78be5e897522724dd2ef20007b7"><div class="ttname"><a href="classvafmbase_1_1_circuit.html#aace6a78be5e897522724dd2ef20007b7">vafmbase.Circuit.cCoreID</a></div><div class="ttdeci">cCoreID</div><div class="ttdoc">index of circuit in cCore </div><div class="ttdef"><b>Definition:</b> <a href="vafmbase_8py_source.html#l00178">vafmbase.py:178</a></div></div>
-<div class="ttc" id="classvafmcircuits___v_d_w_1_1_v_d_w_html"><div class="ttname"><a href="classvafmcircuits___v_d_w_1_1_v_d_w.html">vafmcircuits_VDW.VDW</a></div><div class="ttdoc">Van Der Walls force circuit. </div><div class="ttdef"><b>Definition:</b> <a href="vafmcircuits___v_d_w_8py_source.html#l00031">vafmcircuits_VDW.py:31</a></div></div>
+<div class="ttc" id="classvafmcircuits___v_d_w_1_1_v_d_w_html"><div class="ttname"><a href="classvafmcircuits___v_d_w_1_1_v_d_w.html">vafmcircuits_VDW.VDW</a></div><div class="ttdoc">Van Der Walls force circuit. </div><div class="ttdef"><b>Definition:</b> <a href="vafmcircuits___v_d_w_8py_source.html#l00030">vafmcircuits_VDW.py:30</a></div></div>
 <div class="ttc" id="classvafmbase_1_1_circuit_html_ab8ffc3f4428dec41f9e6958a1a16d8c1"><div class="ttname"><a href="classvafmbase_1_1_circuit.html#ab8ffc3f4428dec41f9e6958a1a16d8c1">vafmbase.Circuit.SetInputs</a></div><div class="ttdeci">def SetInputs</div><div class="ttdef"><b>Definition:</b> <a href="vafmbase_8py_source.html#l00197">vafmbase.py:197</a></div></div>
 <div class="ttc" id="classvafmbase_1_1_circuit_html"><div class="ttname"><a href="classvafmbase_1_1_circuit.html">vafmbase.Circuit</a></div><div class="ttdoc">Abstract circuit class. </div><div class="ttdef"><b>Definition:</b> <a href="vafmbase_8py_source.html#l00135">vafmbase.py:135</a></div></div>
 <div class="ttc" id="classvafmbase_1_1_circuit_html_a60c3a2fc29e6ae2172ab8015082079d5"><div class="ttname"><a href="classvafmbase_1_1_circuit.html#a60c3a2fc29e6ae2172ab8015082079d5">vafmbase.Circuit.AddInput</a></div><div class="ttdeci">def AddInput</div><div class="ttdef"><b>Definition:</b> <a href="vafmbase_8py_source.html#l00280">vafmbase.py:280</a></div></div>
@@ -207,7 +206,7 @@ $(document).ready(function(){initNavTree('vafmcircuits___v_d_w_8py_source.html',
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><b>vafmcircuits_VDW.py</b></li>
-    <li class="footer">Generated on Mon Mar 31 2014 16:37:16 for pyVAFM by
+    <li class="footer">Generated on Mon Mar 31 2014 16:40:46 for pyVAFM by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.5 </li>
   </ul>
