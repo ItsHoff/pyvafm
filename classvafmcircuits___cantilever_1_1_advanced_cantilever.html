@@ -165,12 +165,9 @@ schema</div></div>
 </ul>
 <p><b>Initialisation</b> <b>commands:</b> </p>
 <ul>
-<li>Each of these commads follow the same format which is first you must entere the values for the vertical mode then the lateral. For example for 2 vertical modes and 1 lateral .AddK(1,2,3) where 1 and 2 are the vertical modes K values and 3 is the lateral. If a mode isn't being used then simply only enter the values that are required. eg for 2 lateral modes and 0 vertical .AddK(1,2) where 1 and 2 are both for the lateral mode.</li>
-<li><em></em>.AddK(argument) - Assigns the spring constant for each mode.</li>
-<li><em></em>.AddQ(argument) - Assigns the Q factor for each mode.</li>
-<li><em></em>.Addf0(argument) - Assigns the eigen frequency for each mode.</li>
-<li><em></em>.AddM(argument) - Assigns the mass for each mode, if this command is not used the mass is calculated automatically.</li>
+<li><em></em>.AddMode(Vertical=True|False, k=float, Q=float, M=float, f0 =float)- this is how you add a mode to the cantilever, Vertical = True means a vertical mode, Vertical = False is a lateral. k is the spring constant for that mode, Q is the Q factor, M is the mass although if tis is not included the simulation will calculate a mass for you and f0 is the eigenfrequency of the mode.</li>
 <li><em></em>.StartingPos(x,y,z) - Assigns the starting position from equilibrium for the cantilever.</li>
+<li><em></em>.CantileverReady() - use this command after you are done setting up the cantilever.</li>
 </ul>
 <p><b>Input</b> <b>channels:</b> </p>
 <ul>
@@ -196,13 +193,13 @@ schema</div></div>
 </ul>
 <p><b>Examples:</b> </p>
 <div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;canti = machine.AddCircuit(type=<span class="stringliteral">&#39;AdvancedCantilever&#39;</span>,name=<span class="stringliteral">&#39;canti&#39;</span>,NumberOfModesV=2,NumberOfModesL=0, pushed=<span class="keyword">True</span>)</div>
-<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;canti.AddK(1,1)</div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;canti.AddQ(100,100)</div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;canti.Addf0(1,1)</div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;canti.AddM(1,1)</div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;canti.StartingPos(0,3,5)</div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;canti.AddMode(Vertical=<span class="keyword">True</span>, k = 1, Q=100, M=1, f0 =1)</div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;canti.AddMode(Vertical=<span class="keyword">True</span>, k = 1, Q=100, M=1, f0 =1)</div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;canti.AddMode(Vertical=<span class="keyword">False</span>, k = 1, Q=100, M=1, f0 =1)</div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;canti.StartingPos(0,3,5)</div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;canti.CantileverReady()</div>
 </div><!-- fragment --> 
-<p>Definition at line <a class="el" href="vafmcircuits___cantilever_8py_source.html#l00143">143</a> of file <a class="el" href="vafmcircuits___cantilever_8py_source.html">vafmcircuits_Cantilever.py</a>.</p>
+<p>Definition at line <a class="el" href="vafmcircuits___cantilever_8py_source.html#l00139">139</a> of file <a class="el" href="vafmcircuits___cantilever_8py_source.html">vafmcircuits_Cantilever.py</a>.</p>
 </div><hr/>The documentation for this class was generated from the following file:<ul>
 <li>src/<a class="el" href="vafmcircuits___cantilever_8py_source.html">vafmcircuits_Cantilever.py</a></li>
 </ul>
@@ -212,7 +209,7 @@ schema</div></div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacevafmcircuits___cantilever.html">vafmcircuits_Cantilever</a></li><li class="navelem"><a class="el" href="classvafmcircuits___cantilever_1_1_advanced_cantilever.html">AdvancedCantilever</a></li>
-    <li class="footer">Generated on Mon Mar 31 2014 16:47:37 for pyVAFM by
+    <li class="footer">Generated on Wed Apr 2 2014 15:22:50 for pyVAFM by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.5 </li>
   </ul>
