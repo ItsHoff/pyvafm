@@ -89,7 +89,7 @@ function toggleMenu(objID, button) {
 <div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;scanner = machine.AddCircuit(type=<span class="stringliteral">&#39;Scanner&#39;</span>,name=<span class="stringliteral">&#39;scan&#39;</span>, Process = machine, pushed=<span class="keyword">True</span>)</div>
 </div><!-- fragment --><p>We have a 3d force field for the NaCl included in the tutorial, the details of how to add an interpolation circuit was covered in tutorial 6.2 so I will simply state what is required here. One thing to note is the ForceMultiplier parameter this allows you to change the units of your force field to what ever it is you require;</p>
 <div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;inter = machine.AddCircuit(type=<span class="stringliteral">&#39;i3Dlin&#39;</span>,name=<span class="stringliteral">&#39;inter&#39;</span>, components=3, pushed=<span class="keyword">True</span>)</div>
-<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;inter.Configure(steps=[0.705,0.705,0.1], npoints=[8,8,171])</div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;inter.Configure(steps=[0.705,0.705,0.1], npoints=[8,8,201])</div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;inter.Configure(pbc=[<span class="keyword">True</span>,<span class="keyword">True</span>,<span class="keyword">False</span>])</div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;inter.Configure(ForceMultiplier=1e10)</div>
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;inter.ReadData(<span class="stringliteral">&#39;NaClforces.dat&#39;</span>)</div>
@@ -239,7 +239,7 @@ Tutorial 5 output</div></div>
 <div class="float-left">Documentation for pyVAFM </div>
 <div class="float-right">
 <small>
-Generated on Mon May 12 2014 18:16:56 for pyVAFM by&nbsp;<a href="http://www.doxygen.org/index.html"><img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.8.5</small></address>
+Generated on Tue May 13 2014 11:30:11 for pyVAFM by&nbsp;<a href="http://www.doxygen.org/index.html"><img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.8.5</small></address>
 </div>
 <!-- top ends here -->
 <!-- </div> -->
