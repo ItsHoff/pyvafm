@@ -114,49 +114,47 @@ function toggleMenu(objID, button) {
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;</div>
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;</div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="comment">#connect oscillator to the filters</span></div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <span class="keywordflow">print</span> <span class="stringliteral">&quot;Hi&quot;</span></div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    machine.Connect(<span class="stringliteral">&quot;wave.sin&quot;</span>,<span class="stringliteral">&quot;sklp.signal&quot;</span>,<span class="stringliteral">&quot;skhp.signal&quot;</span>,<span class="stringliteral">&quot;skbp.signal&quot;</span>,<span class="stringliteral">&quot;rclp.signal&quot;</span>,<span class="stringliteral">&quot;rchp.signal&quot;</span>)</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <span class="keywordflow">print</span> <span class="stringliteral">&quot;Hi2&quot;</span></div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    machine.Connect(<span class="stringliteral">&quot;sklp.out&quot;</span>,<span class="stringliteral">&quot;asklp.signal&quot;</span>) <span class="comment">#filter -&gt; amplitude detector</span></div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    machine.Connect(<span class="stringliteral">&quot;skhp.out&quot;</span>,<span class="stringliteral">&quot;askhp.signal&quot;</span>) <span class="comment">#filter -&gt; amplitude detector</span></div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    machine.Connect(<span class="stringliteral">&quot;skbp.out&quot;</span>,<span class="stringliteral">&quot;askbp.signal&quot;</span>) <span class="comment">#filter -&gt; amplitude detector</span></div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    machine.Connect(<span class="stringliteral">&quot;rclp.out&quot;</span>,<span class="stringliteral">&quot;arclp.signal&quot;</span>) <span class="comment">#filter -&gt; amplitude detector</span></div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    machine.Connect(<span class="stringliteral">&quot;rchp.out&quot;</span>,<span class="stringliteral">&quot;archp.signal&quot;</span>) <span class="comment">#filter -&gt; amplitude detector</span></div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    </div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <span class="comment">#output to file - dump=0 means only manual dump</span></div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    out1 = machine.AddCircuit(type=<span class="stringliteral">&#39;output&#39;</span>,name=<span class="stringliteral">&#39;output&#39;</span>,file=<span class="stringliteral">&#39;filters.dat&#39;</span>, dump=0)</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    out1.Register(<span class="stringliteral">&#39;wave.freq&#39;</span>, <span class="stringliteral">&#39;asklp.amp&#39;</span>, <span class="stringliteral">&#39;askhp.amp&#39;</span>, <span class="stringliteral">&#39;askbp.amp&#39;</span>,<span class="stringliteral">&quot;arclp.amp&quot;</span>,<span class="stringliteral">&quot;archp.amp&quot;</span>)</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    </div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    </div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <span class="comment">#set the frequency and relax the filter</span></div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    freq = 5</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    machine.SetInput(channel=<span class="stringliteral">&quot;wave.freq&quot;</span>, value=freq)</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    machine.Wait(1)</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    </div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    machine.Connect(<span class="stringliteral">&quot;wave.sin&quot;</span>,<span class="stringliteral">&quot;sklp.signal&quot;</span>,<span class="stringliteral">&quot;skhp.signal&quot;</span>,<span class="stringliteral">&quot;skbp.signal&quot;</span>,<span class="stringliteral">&quot;rclp.signal&quot;</span>,<span class="stringliteral">&quot;rchp.signal&quot;</span>)</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    machine.Connect(<span class="stringliteral">&quot;sklp.out&quot;</span>,<span class="stringliteral">&quot;asklp.signal&quot;</span>) <span class="comment">#filter -&gt; amplitude detector</span></div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    machine.Connect(<span class="stringliteral">&quot;skhp.out&quot;</span>,<span class="stringliteral">&quot;askhp.signal&quot;</span>) <span class="comment">#filter -&gt; amplitude detector</span></div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    machine.Connect(<span class="stringliteral">&quot;skbp.out&quot;</span>,<span class="stringliteral">&quot;askbp.signal&quot;</span>) <span class="comment">#filter -&gt; amplitude detector</span></div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    machine.Connect(<span class="stringliteral">&quot;rclp.out&quot;</span>,<span class="stringliteral">&quot;arclp.signal&quot;</span>) <span class="comment">#filter -&gt; amplitude detector</span></div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    machine.Connect(<span class="stringliteral">&quot;rchp.out&quot;</span>,<span class="stringliteral">&quot;archp.signal&quot;</span>) <span class="comment">#filter -&gt; amplitude detector</span></div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    </div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <span class="comment">#output to file - dump=0 means only manual dump</span></div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    out1 = machine.AddCircuit(type=<span class="stringliteral">&#39;output&#39;</span>,name=<span class="stringliteral">&#39;output&#39;</span>,file=<span class="stringliteral">&#39;filters.dat&#39;</span>, dump=0)</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    out1.Register(<span class="stringliteral">&#39;wave.freq&#39;</span>, <span class="stringliteral">&#39;asklp.amp&#39;</span>, <span class="stringliteral">&#39;askhp.amp&#39;</span>, <span class="stringliteral">&#39;askbp.amp&#39;</span>,<span class="stringliteral">&quot;arclp.amp&quot;</span>,<span class="stringliteral">&quot;archp.amp&quot;</span>)</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    </div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    </div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <span class="comment">#set the frequency and relax the filter</span></div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    freq = 5</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    machine.SetInput(channel=<span class="stringliteral">&quot;wave.freq&quot;</span>, value=freq)</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    machine.Wait(1)</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    </div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    </div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    <span class="keywordflow">while</span> freq &lt; 700:</div>
 <div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    </div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <span class="keywordflow">while</span> freq &lt; 700:</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    </div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;        <span class="comment">#assign the frequency to the oscillator</span></div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        machine.SetInput(channel=<span class="stringliteral">&quot;wave.freq&quot;</span>, value=freq)</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        </div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;        <span class="comment">#wait some time to charge the capacitors in the filters</span></div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;        machine.Wait(0.5)</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        </div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        out1.Dump() <span class="comment">#output to file</span></div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;        freq *= 1.2 <span class="comment">#ramp the frequency</span></div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;        </div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    </div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;<span class="keywordflow">if</span> __name__ == <span class="stringliteral">&#39;__main__&#39;</span>:</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    main()</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        <span class="comment">#assign the frequency to the oscillator</span></div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        machine.SetInput(channel=<span class="stringliteral">&quot;wave.freq&quot;</span>, value=freq)</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;        </div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        <span class="comment">#wait some time to charge the capacitors in the filters</span></div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        machine.Wait(0.5)</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;        </div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;        out1.Dump() <span class="comment">#output to file</span></div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        freq *= 1.2 <span class="comment">#ramp the frequency</span></div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        </div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    </div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<span class="keywordflow">if</span> __name__ == <span class="stringliteral">&#39;__main__&#39;</span>:</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    main()</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;</div>
 </div><!-- fragment --> </div></div><!-- contents -->
 
 <hr size="1"><address style="text-align: right;">
 <div class="float-left">Documentation for pyVAFM </div>
 <div class="float-right">
 <small>
-Generated on Tue May 13 2014 11:30:11 for pyVAFM by&nbsp;<a href="http://www.doxygen.org/index.html"><img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.8.5</small></address>
+Generated on Mon Jun 2 2014 14:22:39 for pyVAFM by&nbsp;<a href="http://www.doxygen.org/index.html"><img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.8.5</small></address>
 </div>
 <!-- top ends here -->
 <!-- </div> -->
