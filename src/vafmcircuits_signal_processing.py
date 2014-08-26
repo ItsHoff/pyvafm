@@ -12,27 +12,27 @@ import vafmcircuits
 #
 # \image html gain.png "schema"
 # Takes in an input signal and multiplies it by a given gain
-# 
+#
 #
 # \b Initialisation \b parameters:
 # - pushed = True|False  push the output buffer immediately if True
-# - gain = integer 
+# - gain = integer
 #
 # \b Input \b channels:
-# - \a signal 
+# - \a signal
 #
 # \b Output \b channels:
-# - \a out =  signal \f$ \cdot \f$ gain 
+# - \a out =  signal \f$ \cdot \f$ gain
 #
-# 
+#
 # \b Example:
 # \code{.py}
 # machine.AddCircuit(type='gain', name='Gain' , gain = 10)
 # \endcode
 #
 class gain(Circuit):
-    
-    
+
+
 	def __init__(self, machine, name, **keys):
 
 		super(self.__class__, self).__init__( machine, name )
@@ -46,7 +46,7 @@ class gain(Circuit):
 			raise NameError("Missing gain parameter!")
 
 		self.cCoreID = Circuit.cCore.Add_gain(self.machine.cCoreID, c_double(self.gain))
-		
+
 		self.SetInputs(**keys)
 
 	def Initialize (self):
@@ -54,7 +54,7 @@ class gain(Circuit):
 		pass
 
 
-	def Update (self):		
+	def Update (self):
 		pass
 
 
@@ -63,16 +63,16 @@ class gain(Circuit):
 #
 # \image html minmax.png "schema"
 # Takes in an input signal and multiplies it by a given gain
-# 
+#
 #
 # \b Initialisation \b parameters:
 # - pushed = True|False  push the output buffer immediately if True
-# - CheckTime = length of time interval where a max and min value will detected. 
-# 				After this period has elapsed the circuit will output and 
+# - CheckTime = length of time interval where a max and min value will detected.
+# 				After this period has elapsed the circuit will output and
 #				then will begin checking for mins and maxs during the next interval.
 #
 # \b Input \b channels:
-# - \a signal 
+# - \a signal
 #
 # \b Output \b channels:
 # - \a max =  Maximum value found in the CheckTime interval
@@ -80,7 +80,7 @@ class gain(Circuit):
 # - \a amp =\f$ \frac{max - min}{2}\f$
 # - \a offset = \f$ \frac{max + min}{2}\f$
 #
-# 
+#
 # \b Example:
 # \code{.py}
 # machine.AddCircuit(type='minmax', name='MinandMax' , CheckTime = 4)
@@ -130,13 +130,13 @@ class minmax(Circuit):
 #
 # \b Initialisation \b parameters:
 #	- \a pushed = True|False  push the output buffer immediately if True
-#	
 #
-# \b Input \b channels: 
+#
+# \b Input \b channels:
 # 	- \a signal
 #
-# \b Output \b channels: 
-# 	- \a out =  \f$ \frac{din}{dt} \f$ = \f$ \frac{f(t)-f(t-1)}{dt} \f$ 
+# \b Output \b channels:
+# 	- \a out =  \f$ \frac{din}{dt} \f$ = \f$ \frac{f(t)-f(t-1)}{dt} \f$
 #
 # \b Example:
 # \code
@@ -144,8 +144,8 @@ class minmax(Circuit):
 # \endcode
 #
 class derivative(Circuit):
-    
-    
+
+
 	def __init__(self, machine, name, **keys):
 
 		super(self.__class__, self).__init__( machine, name )
@@ -179,14 +179,14 @@ class derivative(Circuit):
 # \image html integral.png "schema"
 # Takes in a input and returns the integral using the Trapezoidal rule
 #
-# \b Initialisation \b parameters: 
+# \b Initialisation \b parameters:
 # 	- \a pushed = True|False  push the output buffer immediately if True
-#	
 #
-# \b Input \b channels: 
+#
+# \b Input \b channels:
 # 	- \a signal
 #
-# \b Output \b channels: 
+# \b Output \b channels:
 # 	- \a out = \f$ \int_0^t in\f$ \f$dt \f$
 #
 # \b Example:
@@ -194,8 +194,8 @@ class derivative(Circuit):
 # machine.AddCircuit(type='integral', name='Integration')
 # \endcode
 class integral(Circuit):
-    
-    
+
+
 	def __init__(self, machine, name, **keys):
 
 		super(self.__class__, self).__init__( machine, name )
@@ -245,8 +245,8 @@ class integral(Circuit):
 # \endcode
 #
 class delay(Circuit):
-    
-    
+
+
 	def __init__(self, machine, name, **keys):
 
 		super(self.__class__, self).__init__( machine, name )
@@ -260,11 +260,11 @@ class delay(Circuit):
 			raise NameError("Missing DelayTime input!")
 
 		self.steps = int(self.delaytime/self.machine.dt)
-		
+
 		self.cCoreID = Circuit.cCore.Add_delay(machine.cCoreID, self.steps)
-		
+
 		self.SetInputs(**keys)
-		
+
 
 
 
@@ -294,7 +294,7 @@ class delay(Circuit):
 # 	- \a signal
 #
 # \b Output \b channels:
-# 	- \a tick  = 1 if a peak and 0 if no peak 
+# 	- \a tick  = 1 if a peak and 0 if no peak
 # 	- \a peak  = location of the peak
 # 	- \a delay = time elapsed since last peak was found
 #
@@ -304,29 +304,31 @@ class delay(Circuit):
 # \endcode
 #
 class peaker(Circuit):
-    
-    
+
+
 	def __init__(self, machine, name, **keys):
-		
+
 		super(self.__class__, self).__init__( machine, name )
 
 		if 'up' in keys.keys():
-			self.up = keys['up']
-			if self.up == 1:
-				self.upordown=True
-			if self.up == 0:
-				self.upordown = False
+			self.upordown = keys['up']
+			if self.upordown is True:
+				self.up = 1
+			elif self.upordown is False:
+				self.up = 0
+			else:
+				raise ValueError("Invalid value for up!")
 
 		else:
 			raise NameError("Missing up or down selection!")
-		
+
 		self.AddInput("signal")
 		self.AddOutput("peak")
 		self.AddOutput("tick")
 		self.AddOutput("delay")
 
 		self.cCoreID = Circuit.cCore.Add_peaker(machine.cCoreID, self.up)
-		
+
 		self.SetInputs(**keys)
 
 
@@ -338,7 +340,7 @@ class peaker(Circuit):
 	def Update (self):
 		pass
 
-		
+
 
 ##\brief Phasor circuit.
 ## \image html Phasor.png "schema"
@@ -354,7 +356,7 @@ class peaker(Circuit):
 #
 # \b Output \b channels:
 # 	- \a tick = 1 when input 2 becomes positve assuming input 1 has alreayd become postive before it
-# 	- \a delay = time difference between input 1 and input 2 becoming positve 
+# 	- \a delay = time difference between input 1 and input 2 becoming positve
 #
 # \b Example:
 # \code
@@ -362,8 +364,8 @@ class peaker(Circuit):
 # \endcode
 #
 class phasor(Circuit):
-    
-    
+
+
 	def __init__(self, machine, name, **keys):
 
 		super(self.__class__, self).__init__( machine, name )
@@ -371,12 +373,12 @@ class phasor(Circuit):
 		self.AddInput("in2")
 		self.AddOutput("tick")
 		self.AddOutput("delay")
-		
+
 		self.counter= 0
 		self.check = False
-		
+
 		self.cCoreID = Circuit.cCore.Add_phasor(machine.cCoreID)
-		
+
 		self.SetInputs(**keys)
 
 	def Initialize (self):
@@ -398,7 +400,7 @@ class phasor(Circuit):
 # \b Initialisation \b parameters:
 # 	- \a pushed = True|False  push the output buffer immediately if True
 #
-# \b Input \b channels: 
+# \b Input \b channels:
 # 	- \a signal = incoming signal
 # 	- \a min = minimum value
 # 	- \a max = maximum value
@@ -414,8 +416,8 @@ class phasor(Circuit):
 # \endcode
 #
 class limiter(Circuit):
-    
-    
+
+
 	def __init__(self, machine, name, **keys):
 
 		super(self.__class__, self).__init__( machine, name )
@@ -442,7 +444,7 @@ class limiter(Circuit):
 ## \brief Flip circuit.
 #
 ## \image html Flip.png "schema"
-# Takes in an input and will output a tick everytime the signal changes 
+# Takes in an input and will output a tick everytime the signal changes
 # from negative to positive.
 #
 # \b Initialisation \b parameters:
@@ -460,23 +462,23 @@ class limiter(Circuit):
 # \endcode
 #
 class flip(Circuit):
-    
-    
+
+
 	def __init__(self, machine, name, **keys):
 
 		super(self.__class__, self).__init__( machine, name )
 		self.AddInput("signal")
 		self.AddOutput("tick")
 		self.yo= 0
-		
+
 		self.cCoreID = Circuit.cCore.Add_flip(machine.cCoreID)
-		
+
 		self.SetInputs(**keys)
-	
-		
+
+
 	def Initialize (self):
 		pass
-	
+
 	def Update (self):
 		pass
 

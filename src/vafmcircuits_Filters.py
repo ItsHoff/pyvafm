@@ -14,7 +14,7 @@ from ctypes import c_double
 # Takes a signal in and passes it through a low pass filter using the Sallen-Key topology
 #
 # \b Initialisation \b parameters:
-# 	- \a gain =  Integer:  How much gain the signal will recive 
+# 	- \a gain =  Integer:  How much gain the signal will recive
 # 	- \a Q = the Q value of the filter
 #	- \a fcut = the frequency cut off for the circuit
 # 	- \a pushed = True|False  push the output buffer immediately if True
@@ -33,12 +33,12 @@ from ctypes import c_double
 # \endcode
 #
 class SKLP(Circuit):
-    
-    
+
+
 	def __init__(self, machine, name, **keys):
-		
+
 		super(self.__class__, self).__init__( machine, name )
-		
+
 
 		self.AddInput("signal")
 		self.AddOutput("out")
@@ -64,8 +64,8 @@ class SKLP(Circuit):
 		else:
 			raise NameError("Missing fcut!")
 
-		
-		
+
+
 		self.cCoreID = Circuit.cCore.Add_SKLP(self.machine.cCoreID,
 			c_double(self.fc), c_double(self.Q), c_double(self.Gain))
 
@@ -73,12 +73,12 @@ class SKLP(Circuit):
 
 
 	def Initialize (self):
-		
+
 		pass
-		
-		
-		
-		
+
+
+
+
 	def Update (self):
 		pass
 
@@ -90,7 +90,7 @@ class SKLP(Circuit):
 # Takes a signal in and passes it through a High pass filter using the Sallen-Key topology
 #
 # \b Initialisation \b parameters:
-# 	- \a gain =  Integer  How much gain the signal will recive 
+# 	- \a gain =  Integer  How much gain the signal will recive
 # 	- \a Q = the Q value of the filter
 #	- \a fcut = the frequency cut off for the circuit
 # 	- \a pushed = True|False  push the output buffer immediately if True
@@ -109,12 +109,12 @@ class SKLP(Circuit):
 # \endcode
 #
 class SKHP(Circuit):
-    
-    
+
+
 	def __init__(self, machine, name, **keys):
-		
+
 		super(self.__class__, self).__init__( machine, name )
-		
+
 
 		self.AddInput("signal")
 		self.AddOutput("out")
@@ -143,15 +143,15 @@ class SKHP(Circuit):
 		self.cCoreID = Circuit.cCore.Add_SKHP(self.machine.cCoreID,
 			c_double(self.fc), c_double(self.Q), c_double(self.Gain))
 
-		
-	
+
+
 	def Initialize (self):
-		
+
 		pass
-		
-		
-		
-		
+
+
+
+
 	def Update (self):
 		pass
 
@@ -161,7 +161,7 @@ class SKHP(Circuit):
 # Takes a signal in and passes it through a Band pass filter using the Sallen-Key topology
 #
 # \b Initialisation \b parameters:
-# 	- \a gain =  Integer  How much gain the signal will recive 
+# 	- \a gain =  Integer  How much gain the signal will recive
 #	- \a fc = the frequency cut off for the circuit
 #	- \a band = The band of frequncies that will be filtered.
 # 	- \a pushed = True|False  push the output buffer immediately if True
@@ -180,12 +180,12 @@ class SKHP(Circuit):
 # \endcode
 #
 class SKBP(Circuit):
-    
-    
+
+
 	def __init__(self, machine, name, **keys):
-		
+
 		super(self.__class__, self).__init__( machine, name )
-		
+
 
 		self.AddInput("signal")
 		self.AddOutput("out")
@@ -198,10 +198,10 @@ class SKBP(Circuit):
 			print "WARNING! No gain given, using default gain = "+str(self.Gain)
 
 		self.fc=0
-		if 'fc' in keys.keys():
-			self.fc = keys['fc']
+		if 'fcut' in keys.keys():
+			self.fc = keys['fcut']
 		else:
-			raise NameError("Missing fc!")
+			raise NameError("Missing fcut!")
 
 		self.band=0
 		if 'band' in keys.keys():
@@ -212,13 +212,13 @@ class SKBP(Circuit):
 		self.cCoreID = Circuit.cCore.Add_SKBP(self.machine.cCoreID,
 			c_double(self.fc), c_double(self.band), c_double(self.Gain))
 
-		
+
 	def Initialize (self):
 		pass
-		
-		
-		
-		
+
+
+
+
 	def Update (self):
 		pass
 
@@ -233,7 +233,7 @@ class SKBP(Circuit):
 #	- \a order = the order of the filter
 # 	- \a pushed = True|False  push the output buffer immediately if True
 #
-# \b Input \b channels: 
+# \b Input \b channels:
 # 	- \a signal = Incoming signal
 #
 # \b Output \b channels:
@@ -246,20 +246,20 @@ class SKBP(Circuit):
 # \endcode
 #
 class RCLP(Circuit):
-    
-    
+
+
 	def __init__(self, machine, name, **keys):
-		
+
 		super(self.__class__, self).__init__( machine, name )
-		
+
 
 		self.AddInput("signal")
 		self.AddOutput("out")
 
 
 		self.fc=0
-		if 'fc' in keys.keys():
-			self.fc = keys['fc']
+		if 'fcut' in keys.keys():
+			self.fc = keys['fcut']
 		else:
 			raise NameError("Missing fcut!")
 
@@ -274,16 +274,16 @@ class RCLP(Circuit):
 
 		self.cCoreID = Circuit.cCore.Add_RCLP(self.machine.cCoreID,
 			c_double(self.fc), self.Order)
-		
+
 	def Initialize (self):
-		
+
 		pass
-		
-		
-	
+
+
+
 	def Update (self):
-		
-		
+
+
 		pass
 
 ## \brief RC high-pass filter circuit.
@@ -310,20 +310,20 @@ class RCLP(Circuit):
 # \endcode
 #
 class RCHP(Circuit):
-    
-    
+
+
 	def __init__(self, machine, name, **keys):
-		
+
 		super(self.__class__, self).__init__( machine, name )
-		
+
 
 		self.AddInput("signal")
 		self.AddOutput("out")
 
 
 		self.fc=0
-		if 'fc' in keys.keys():
-			self.fc = keys['fc']
+		if 'fcut' in keys.keys():
+			self.fc = keys['fcut']
 		else:
 			raise NameError("Missing fcut!")
 
@@ -336,16 +336,16 @@ class RCHP(Circuit):
 
 
 		self.y  = [0] * (self.Order +1) #this is the output at time t+dt of each filter, y[0] is the incoming signal
-		self.yo = [0] * (self.Order +1) #this is the output at time t of each filter	
-		self.yoo = [0] * (self.Order +1) #this is the output at time t-dt of each filter	
+		self.yo = [0] * (self.Order +1) #this is the output at time t of each filter
+		self.yoo = [0] * (self.Order +1) #this is the output at time t-dt of each filter
 
 		self.cCoreID = Circuit.cCore.Add_RCHP(self.machine.cCoreID,
 			c_double(self.fc), self.Order)
-		
+
 	def Initialize (self):
-		
+
 		pass
-		
+
 	def Update (self):
 
 		pass

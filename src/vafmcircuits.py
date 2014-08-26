@@ -15,7 +15,7 @@ import threading
 import vafmcircuits_math, vafmcircuits_output, vafmcircuits_signal_gens, vafmcircuits_Cantilever
 import vafmcircuits_Logic, vafmcircuits_Filters, vafmcircuits_control, vafmcircuits_Interpolation
 import vafmcircuits_signal_processing, vafmcircuits_Scanner, vafmcircuits_FlipFlop
-import vafmcircuits_VDW
+import vafmcircuits_VDW, vafmcircuits_avg, vafmcircuits_Comparison
 
 
 ## \package vafmcircuits
@@ -37,7 +37,7 @@ import vafmcircuits_VDW
 #
 # #create a machine circuit inside the main machine
 # composite = machine.AddCircuit(type="Machine", name='pll', ...)
-# 
+#
 # \endcode
 #
 #
@@ -46,8 +46,8 @@ class Machine(Circuit):
 	singleton = False
 	main = None
 	#cCore = None
-	
-	
+
+
 	## Class contructor.
 	# This should be used only to create the main virtual machine circuit.
 	#
@@ -61,24 +61,24 @@ class Machine(Circuit):
 	# \note Only one machine can be initialised this way.
 	#
 	def __init__(self, machine=None, name="machine", **keys):
-		
+
 		isMain = 0
-		
+
 		if (Machine.singleton == True and machine == None):
 			raise NameError ("ERROR! Only one main machine can be initialised!")
-		
+
 		if(Machine.singleton == False and machine == None):
 			#if this is the absolute first machine to be added
 			print "Init main machine..."
 			Machine.singleton = True
 			Machine.main = self
 			isMain = 1
-			
+
 
 		print "adding circuit",name,": machine == None =>",machine == None
-		
+
 		print "init of Machine..."
-		
+
 		super(self.__class__, self).__init__( machine, name )
 
 
@@ -104,21 +104,21 @@ class Machine(Circuit):
 				print 'WARNING! No timestep dt was given in the initialisation parameters.'
 		else:
 			self.dt = keys['dt']
-		
+
 		## Integer number of update steps so far.
 		self._idt = 0;
-		
+
 		if(machine == None):
 			Circuit.cCore.SetTimeStep(c_double(self.dt))
-		
+
 		self._MetaI = OrderedDict()
 		self.cCoreI = []
 		#self.cCoreIx= OrderedDict() #dictionary <name,feedindex>
-		
+
 		self._MetaO = OrderedDict()
 		self.cCoreO = []
 		#self.cCoreOx= OrderedDict() #dictionary <name,feedindex>
-		
+
 		# create a container in the cCore
 		owneridx = -1
 		if self.machine == None:
@@ -126,82 +126,82 @@ class Machine(Circuit):
 			owneridx = -1
 		else:
 			owneridx = self.machine.cCoreID
-		
+
 		self.cCoreID = Circuit.cCore.Add_Container(owneridx,isMain)
 		#print 'machine cCoreID: ',self.cCoreID
-		
+
 		if self.machine == None:
 			self.AddOutput('time')
-		
+
 
 		if 'assembly' in keys.keys():
 			self.Assemble = keys['assembly']
 			self.Assemble(self,**keys)
 
-		
+
 		#self.SetCCoreChannels()
 		self.SetInputs(**keys)
 
 
-		
+
 
 	##\internal
 	## Get the feed indexes from the cCore
 	#
 	#
 	def SetCCoreChannels(self):
-		
+
 		#for a container, Circuit.cCore.GetInputs gives the indexes of the dummy
 		#relay circuits that represents external channels
-		
-		
+
+
 		getins = Circuit.cCore.GetInputs
 		getins.restype = POINTER(c_int)
 		getouts = Circuit.cCore.GetOutputs
 		getouts.restype = POINTER(c_int)
-		
+
 		# get the indexes of input(original) channels
 		dummyins = getins(self.cCoreID) #indexes of the dummy circuits
 		for i in range(len(self.I)):
-			
+
 			feedin = getins(dummyins[i])[0]
 			feedout= getouts(dummyins[i])[0]
-			
+
 			self.I.values()[i].signal.cCoreFEED = feedin
 			self._MetaI.values()[i].signal.cCoreFEED = feedout
-		
+
 		# --------------------------------------------------------------
-		
+
 		# get the indexes of output channels
 		dummyouts = getouts(self.cCoreID) #indexes of the dummy circuits
 		for i in range(len(self.O)):
-			
+
 			feedin = getins(dummyouts[i])[0]
 			feedout= getouts(dummyouts[i])[0]
-			
+
 			self.O.values()[i].signal.cCoreFEED = feedout
 			self._MetaO.values()[i].signal.cCoreFEED = feedin
-			
+
 		#print self.I.values(), self.O.values()
 		print 'PY: SetCCoreChannels done!'
 
 	def SetInputs_fromKeys(self, **kwargs):
-		
+
 		for key in kwargs.keys():
-			
+
 			if key in self.I.keys():
-				
-				
+
+
 				self.I[key].Set(kwargs[key]) #deprecated... sets the value in python!
-				
+
 				idx = self.I.keys().index(key) #find the position of the key
 				print "PY: "+key+" is an input channel, calling cCore(c):",idx,c_double(kwargs[key])
-				
+
 				Circuit.cCore.SetContainerInput(self.cCoreID, idx, c_double(kwargs[key]))
-				
-				
+
+
 				print "   input "+key+" -> "+str(kwargs[key])
-				
+
 			else:
 				#print the init parameter even if not an input flag
 				print " ??" + key + " " + str(kwargs[key])
@@ -210,7 +210,7 @@ class Machine(Circuit):
 
 
 	## Fabricator function.
-	# 
+	#
 	# This function is called when the machine is instantiated, only if
 	# the "assembly" parameter was given among initialisation arguments.
 	# The function is originally left unimplemented, so the user can build
@@ -221,9 +221,9 @@ class Machine(Circuit):
 	# Assembly function definition:
 	#
 	# \code{.py}
-	# 
+	#
 	# def MyAssembly(compo):
-	# 
+	#
 	# 	# add global channels
   	#   compo.AddInput("signal1")
   	#   ...
@@ -241,13 +241,13 @@ class Machine(Circuit):
 	# \code
 	#
 	# def main():
-	#  
+	#
 	#   main = Machine(name='machine', dt=0.01, pushed=True);
-	#   
+	#
 	#   # add a Machine circuit to main, and set it up with the MyAssembly function
   	#   main.AddCircuit(type='Machine', name='compo1', assembly=MyAssembly, pushed=True)
   	#   ...
-	#  
+	#
 	# if __name__ == '__main__':
 	#   main()
 	#
@@ -280,18 +280,18 @@ class Machine(Circuit):
 	# \endcode
 	#
 	def AddInput(self, name):
-		
+
 		if name in self.I.keys() or name in self.O.keys():
 			raise NameError("A channel named "+name+" already exists in composite circuit "+ str(self))
 
 		self.I[name] = Channel(name,self,True)
 		self._MetaI[name] = Channel(name,self,False)
-		
+
 		# add the channel also on the cCore
 		self.cCoreI.append(Circuit.cCore.Add_ChannelToContainer(self.cCoreID, 1)) #1 for input
 		#print 'out idx:',idx
 		#print 'machine added output: ',idx
-		#self.cCoreI.append(idx) 
+		#self.cCoreI.append(idx)
 		print "Circuit ",self.name," added channel",name
 
 	## Create an output channel with the given name.
@@ -310,27 +310,27 @@ class Machine(Circuit):
 	# \endcode
 	#
 	def AddOutput(self, name):
-		
+
 		#print "py adding output..."
-		
+
 		if name in self.I.keys() or name in self.O.keys():
 			raise NameError("A channel named "+name+" already exists in composite circuit "+ str(self))
 
 		self.O[name] = Channel(name,self,False)
 		self._MetaO[name] = Channel(name,self,True)
-		
+
 		# add the channel also on the cCore
 		self.cCoreO.append(Circuit.cCore.Add_ChannelToContainer(self.cCoreID, 0))#1 for input
 		#print 'out idx:',idx
 		#print 'machine added output: ',idx
-		#self.cCoreO.append(idx) 
-		
+		#self.cCoreO.append(idx)
+
 
 	## \internal
 	## Add a circuit of type 'ctype' named 'name' to the setup.
 	#
 	# This looks into all the loaded modules whose name starts with
-	# 'vafmcircuits' and finds the first class named 'ctype'. 
+	# 'vafmcircuits' and finds the first class named 'ctype'.
 	# It then instantiate the class.
 	# - Mandatory arguments:\n
     # 	- type = string: type name of the circuit class\n
@@ -341,7 +341,7 @@ class Machine(Circuit):
     # 	- pushed = bool: defined the output behaviour model.\n
     #	- others: specific arguments depending on the particular circuit to add.
     #
-    # 
+    #
     # @param **argkw Keyworded arguments for circuit initialisation.
     #
 	# @return Reference to the created circuit.
@@ -355,9 +355,9 @@ class Machine(Circuit):
 	# \endcode
 	#
 	def AddCircuit(self, **argkw):
-		
-		
-		
+
+
+
 		lst = sys.modules.keys()
 		classobj = None
 
@@ -365,7 +365,7 @@ class Machine(Circuit):
 		if not ("type" in argkw.keys()):
 			raise SyntaxError("The circuit type was not specified.")
 		ctype = argkw["type"]
-		
+
 		if not ("name" in argkw.keys()):
 			raise SyntaxError("The circuit name was not specified.")
 		cname = argkw["name"]
@@ -434,7 +434,7 @@ class Machine(Circuit):
 			raise NameError( "GetInternalChannel error: circuit "+cname+" not found." )
 
 		#get the circuit
-		circ = self.circuits[cname] 
+		circ = self.circuits[cname]
 
 		if chtype == ChannelType.Input or chtype == ChannelType.Any:
 			allchs.update(circ.I)
@@ -522,7 +522,7 @@ class Machine(Circuit):
 		chname = chname[1]
 
 
-		
+
 
 		if self._IsGlobal(tag):
 			circ = self #if the tag is global, the circuit is the machine itself
@@ -531,7 +531,7 @@ class Machine(Circuit):
 			if not (cname in circ.keys()):
 				raise NameError( "Machine.GetOutputChannel error: circuit "+cname+" not found." )
 			circ = circ[cname]
-			
+
 		allch = {} #create a dictionary
 		allch.update(circ.O)
 
@@ -569,7 +569,7 @@ class Machine(Circuit):
 	# \b Example:
 	# \code{.py}
   	# main = Machine(name='machine', dt=0.01, pushed=True);
-  	# 
+  	#
   	# main.AddCircuit(type='waver', name='osc', amp=1, freq=1)
   	# main.AddCircuit(type='opAdd', name='adder', factors=3)
   	#
@@ -581,17 +581,17 @@ class Machine(Circuit):
 
 		#if the output is a global, then it means that we want to connect
 		#the global input to input channels in the machine
-		
+
 		ccSrcID = -1
 		ccDstID = -1
 		ccSrcCH = -1
 		ccDstCH = -1
-		
+
 		#find the output channel
 		if self._IsGlobal(args[0]):
 			#look in MetaI
 			outsignal = self._GetMetaChannel(args[0], ChannelType.Input)
-			
+
 			print 'PY: connect src - out channel name ',outsignal.name
 			print 'PY: connect src - index ',self.I.keys().index(outsignal.name)
 			ccSrcID = self.cCoreI[self.I.keys().index(outsignal.name)]
@@ -599,20 +599,20 @@ class Machine(Circuit):
 			print 'PY: connect src - dummyidx ',ccSrcID
 			print self.cCoreI
 			#the global output is the dummy output
-			
+
 		else:
 			#otherwise, just look for the channel in the normal circuits
 			outsignal = self._GetInternalChannel(args[0], ChannelType.Output)
 			ccSrcID = outsignal.owner.cCoreID
 			ccSrcCH = outsignal.owner.O.keys().index(outsignal.name)
-			
-		
-		
+
+
+
 
 		for tag in args[1:]: #for each target input tag
-			
+
 			print "PY: connecting " + args[0] + " -> " + tag
-			
+
 			# find the target channel
 			if self._IsGlobal(tag):
 				target = self._GetMetaChannel(tag, ChannelType.Output)
@@ -629,12 +629,12 @@ class Machine(Circuit):
 
 			print "  -> " + tag
 			target.signal = outsignal.signal
-			
+
 			#connect in cCore: Connect(int c1, int out, int c2, int in)
 			#outidx = outsignal.owner.O.keys().index(outsignal.name)
 			#inidx = target.owner.I.keys().index(target.name)
 			print 'PY: connecting ',ccSrcID,ccSrcCH,ccDstID,ccDstCH
-			
+
 			Circuit.cCore.Connect(ccSrcID,ccSrcCH, ccDstID, ccDstCH)
 
 			print 'PY: connection done!'
@@ -642,18 +642,18 @@ class Machine(Circuit):
 
 		#if the output is a global, then it means that we want to connect
 		#the global input to input channels in the machine
-		
+
 		ccSrcID = -1
 		ccDstID = -1
 		ccSrcCH = -1
 		ccDstCH = -1
-		
+
 		metaSrc = 0
-		
+
 		chname = args[0].split('.',2)[1];
 		#find the output channel
 		if self._IsGlobal(args[0]):
-			
+
 			ccSrcID = self.cCoreID
 			ccSrcCH = self.I.keys().index(chname)
 			outsignal = self._MetaI[chname]
@@ -665,9 +665,9 @@ class Machine(Circuit):
 			ccSrcCH = outsignal.owner.O.keys().index(outsignal.name)
 
 		for tag in args[1:]: #for each target input tag
-			
+
 			#print "PY: connecting " + args[0] + " -> " + tag
-			
+
 			# find the target channel
 			metaDst = 0
 			chname = tag.split('.',2)[1];
@@ -682,14 +682,14 @@ class Machine(Circuit):
 				ccDstCH = target.owner.I.keys().index(chname)
 
 			#print "  -> " + tag
-			
+
 			target.signal = outsignal.signal
-			
+
 			#connect in cCore: Connect(int c1, int out, int c2, int in)
 			#outidx = outsignal.owner.O.keys().index(outsignal.name)
 			#inidx = target.owner.I.keys().index(target.name)
 			#print 'PY: connecting ',ccSrcID,ccSrcCH,ccDstID,ccDstCH
-			
+
 			Circuit.cCore.Connect(ccSrcID,ccSrcCH, metaSrc, ccDstID, ccDstCH,metaDst)
 
 			#print 'PY: connection done!'
@@ -718,7 +718,7 @@ class Machine(Circuit):
 			#print "  - "+ target.name
 			target.Disconnect()
 
-	
+
 	## \brief Set the value of an input channel.
 	# Immediately sets the value of an input channel.
 	#
@@ -731,20 +731,20 @@ class Machine(Circuit):
 	# \endcode
 	#
 	def SetInput(self, channel=None, value=None):
-		
+
 		ch = self.GetChannel(channel)
 		ch.Set(value)
 		circ = ch.owner
-		
+
 		key = ch.name
-		
+
 		if ch.isInput == True:
 			idx = circ.I.keys().index(key) #find the position of the key
 		else:
 			idx = circ.O.keys().index(key)
 		print "PY: setinput "+circ.name+"."+key+": "+str(value),circ.cCoreID,idx
 		Circuit.cCore.SetInput(circ.cCoreID, idx, c_double(value))
-		
+
 		#print tag,val,ch
 
 	## \internal
@@ -760,7 +760,7 @@ class Machine(Circuit):
 	## Update cycle.
 	#
 	# Calls the update routine of each circuit in the setup.
-	# 
+	#
 	def UpdateOLD(self):
 
 		#print 'updating machine ' +self.name
@@ -774,7 +774,7 @@ class Machine(Circuit):
 		#	self._MetaI[key].Set(self.I[key].value)
 
 		for kw in self.circuits.keys():
-			
+
 			if(self.circuits[kw].enabled):
 				self.circuits[kw].Update()
 				if self.circuits[kw].pushed: #push if needed
@@ -790,10 +790,10 @@ class Machine(Circuit):
 		#print 'after post' + str(self.O['time'].value)
 
 	def Update(self):
-		
+
 		Circuit.cCore.Update(1)
-		
-		
+
+
 
 
 	## \internal
@@ -821,33 +821,33 @@ class Machine(Circuit):
 
 
 	def Wait(self, dtime):
-		
+
 		#for i in range(int(math.floor(dtime/self.dt))): self.Update()
 		Circuit.cCore.Update(c_int(int(math.floor(dtime/self.dt))))
-	
+
 	def WaitSteps(self, nsteps):
-		
+
 		#for i in range(int(math.floor(dtime/self.dt))): self.Update()
 		Circuit.cCore.Update(c_int(nsteps))
-		
+
 	def Wait2(self, dtime):
-		
+
 		for i in xrange(int(math.floor(dtime/self.dt))):
 			Circuit.cCore.Update(1)
-	
+
 	def WaitPY(self, dtime):
-		
+
 		i = 0
 		imax = int(math.floor(dtime/self.dt))
 		while i < imax:
 			self.UpdateOLD()
 			i += 1
-			
+
 	def WaitPY2(self, dtime):
-		
+
 		for i in xrange(int(math.floor(dtime/self.dt))):
 			self.UpdateOLD()
-	
+
 
 
 
