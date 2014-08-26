@@ -2,6 +2,7 @@ import os
 
 from collections import OrderedDict
 from ctypes import *
+import os
 
 
 ## \package vafmbase
@@ -182,8 +183,10 @@ class Circuit(object):
 		#init the cCore if itz the first time
 		if(Circuit.cCoreINIT == False):
 			print 'Initializing the cCore...'
+			##Circuit.cCore = cdll.LoadLibrary("./vafmcore.so")
 			current_dir = os.path.dirname(os.path.realpath(__file__))
 			Circuit.cCore = cdll.LoadLibrary(current_dir + "/vafmcore.so")
+
 			Circuit.cCore.INIT()
 			Circuit.cCore.ChannelToPy.restype = c_double
 

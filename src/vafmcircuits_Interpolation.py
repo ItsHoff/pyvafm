@@ -9,6 +9,7 @@ import math
 from vafmbase import Circuit
 from scipy.interpolate import LinearNDInterpolator
 import ctypes
+import sys
 
 ## \brief Tri-linear interpolation circuit.
 #
@@ -49,7 +50,6 @@ import ctypes
 #	inter.ReadData('NaClforces.dat')
 # \endcode
 #
-
 class i3Dlin(Circuit):
     
     
@@ -258,6 +258,183 @@ class i1Dlin(Circuit):
 			Circuit.cCore.i1Dlin_SetData(self.cCoreID, 0,test_arr,npts)
 
 
+## \brief quad-linear interpolation circuit.
+#
+# \image html i4dlin.png "schema"
+#
+# This is the circuit that calculates the interpolation of 4d PARCHG data that is outputted from VASP and is used for STM images.
+#
+# - \b Initialisation \b parameters:.
+# 	- \a Components = Number of components of force in the force field.
+# 	- \a pushed True|False
+# - \b Initialisation \b commands:
+#	 - \a BiasStep  = The stepsize of the bias between the VASP files.
+#	 - \a StartingV = The starting value of the voltage.
+#	 - \a ConfigureVASP 
+#			-\a pbc = True|False True|False True|False The perodic boundary condition for x y and z.
+# - \b Input \b channels:
+#	 - \a x : this is x the coordiante to calculate the interpolation.
+#	 - \a y : this is y the coordiante to calculate the interpolation.
+#	 - \a z : this is z the coordiante to calculate the interpolation.
+#	 - \a V : this ist he voltage of the STM.
+# - \b Output \b channels:
+# 	- \a Fn: The interpolated forces where n is the component for example F1 would be first first component.
+#
+# \b Example:
+# \code
+#	inter = machine.AddCircuit(type='i4Dlin',name='inter', components=1, pushed=True)
+#	inter.BiasStep=0.5
+#	inter.StartingV=1
+#	inter.ConfigureVASP(pbc=[True,True,False,False])
+#	inter.ReadVASPData("parchg.1.0")
+# \endcode
+#
+
+class i4Dlin(Circuit):
+    
+    
+	def __init__(self, machine, name, **keys):        
+			
+		super(self.__class__, self).__init__( machine, name )
+		
+		if 'components' in keys.keys():
+			self.components = keys['components']
+			print "components = " +str(self.components)
+		else:
+			raise NameError("No components entered ")
+
+		Circuit.cCore.Add_i4Dlin.argtypes = [ctypes.c_int,ctypes.c_int]
+		self.cCoreID = Circuit.cCore.Add_i4Dlin(machine.cCoreID, self.components)
+		self.BiasStep=0
+		self.StartingV=-1
+		self.pbcSET = False
+		self.AddInput("x")
+		self.AddInput("y")
+		self.AddInput("z")
+		self.AddInput("V")
+
+
+		for i in range(0,self.components):
+			self.AddOutput("F"+str(i+1))
+
+		self.SetInputs(**keys)
+
+	def ConfigureVASP(self, **keys):
+				#check for pbc
+		if 'pbc' in keys.keys():
+			if len(keys['pbc']) != 4:
+				raise ValueError("ERROR! the PBC is not a triplet!")
+			else:
+				self.pbc = [0,0,0,0]
+				for i in xrange(len(keys['pbc'])):
+					if keys['pbc'][i] == True:
+						self.pbc[i] = 1
+					else:
+						self.pbc[i] = 0
+				#print "PBC ",self.pbc
+				Circuit.cCore.i4DLinPBC(self.cCoreID, self.pbc[0], self.pbc[1], self.pbc[2], self.pbc[3])
+				self.pbcSET = True
 
 
 
+	def ReadVASPData(self,*filename):
+
+		if self.pbcSET == False:
+			raise NameError ("Error: PBC must be defined first ")
+
+
+		if self.BiasStep == 0:
+			raise NameError ("Error: BiasStep must be defined first ")
+
+		if self.StartingV == -1:
+			raise NameError ("Error: StartingV must be defined first ")
+
+		
+
+
+		Density=[]
+
+
+
+
+		for j in range(0,len(filename)):
+			f = open(filename[j], "r")
+			print "Reading in file: "+ filename[j]
+			size=[0,0,0]
+
+			NumberOfPoints=[0,0,0]
+
+			#Number of points required to obtain given res
+			Points=[0,0,0]
+
+			NumberOfAtoms=0
+
+			
+
+			counter=[1,1,1]
+		
+			for linenumber, line in enumerate(f):
+				#Find super cell size
+				if linenumber == 2:
+					size[0] = float(line.split()[0])
+				
+				if linenumber == 3:
+					size[1] = float(line.split()[1])
+
+				if linenumber == 4:
+					size[2] = float(line.split()[2])
+
+				#Find number of atoms
+				if linenumber == 6:
+					for i in range(0, (len(line.split()))  ):
+						NumberOfAtoms += float(line.split()[i])
+					
+
+				#find number of points
+				if linenumber == NumberOfAtoms+9:
+
+					NumberOfPoints[0]= float(line.split()[0])
+					NumberOfPoints[1]= float(line.split()[1])
+					NumberOfPoints[2]= float(line.split()[2])
+
+				if linenumber > NumberOfAtoms+9:
+					for i in range(0, (len(line.split()))  ):
+						#Divide by volume 
+						# 
+						Density.append( float(line.split()[i])/ (size[0]*size[1]*size[2]) )
+					
+					if len(line.split()) < 10:
+						break
+
+			f.close()
+
+
+			
+		#Find step size
+		dx = float(size[0]/NumberOfPoints[0])
+		dy = float(size[1]/NumberOfPoints[1])
+		dz = float(size[2]/NumberOfPoints[2])
+		dv = float(self.BiasStep)
+		#Find number of points
+		nx = int(NumberOfPoints[0])
+		ny = int(NumberOfPoints[1])
+		nz = int(NumberOfPoints[2])
+		nv = int(len(filename))
+
+		#Set up Ctypes
+		Circuit.cCore.i4Dlin_SetUpData.restype =  ctypes.POINTER(ctypes.POINTER(ctypes.c_double))
+		Circuit.cCore.i4Dlin_SetUpData.argtypes = [ctypes.c_int 
+												  ,ctypes.c_int, ctypes.c_int, ctypes.c_int, ctypes.c_int, 
+												   ctypes.c_double,  ctypes.c_double,  ctypes.c_double,  ctypes.c_double
+												   ,  ctypes.c_double]
+		#Pass some data to C
+		self.data = Circuit.cCore.i4Dlin_SetUpData(self.cCoreID, nx , ny , nz, nv , dx, dy, dz , dv,  self.StartingV)
+
+		#Move array from python to C
+		for c in range(0,self.components):
+			for index in range(0, len(Density)):
+
+				self.data[c][index] = Density[index + c*index]
+
+		#Clear array to free up memory
+		del Density[0:len(Density)]

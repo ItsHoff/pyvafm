@@ -279,3 +279,293 @@ void i1Dlin_periodic(circuit* c) {
 }
 
 
+
+
+/////////////////////////////////////////////////////////////////
+//iparams[0] = components
+//iparams[1] = nx
+//iparams[2] = ny
+//iparams[3] = nz
+//iparams[4] = nv
+//iparams[5] = PBCx
+//iparams[6] = PBCy
+//iparams[7] = PBCz
+//iparams[8] = PBCv
+
+
+
+//params[0] = dx
+//params[1] = dy
+//params[2] = dz
+//params[3] = dv
+//params[4] = Voffset
+
+/////////////////////////////////////////////////////////////////
+int Add_i4Dlin( int owner, int components) {
+	
+    circuit c = NewCircuit();
+	c.nI = 4;
+    c.nO = components;
+
+    c.updatef = i4Dlin;
+    
+    c.iplen = 9;
+    c.iparams = (int*)calloc(c.iplen,sizeof(int));
+    c.iparams[0] = components;
+
+
+
+    c.plen = 5;
+    c.params = (double*)calloc(c.plen,sizeof(double));
+    
+
+
+    c.vplen = components;
+    c.vpparams = (double**)malloc(c.vplen * sizeof(double*));
+    for (int i = 0; i < components; i++) {
+	c.vpparams[i] = (double*)calloc(1, sizeof(double)); // this is the forcefield
+    }
+
+
+    int index = AddToCircuits(c,owner);
+    
+    printf("cCore: Added 4D interpolator.\n");
+    return index;
+	
+}
+
+int i4DLinPBC(int c, int PBCx, int PBCy, int PBCz, int PBCv){
+
+	circuits[c].iparams[5] = PBCx;
+	circuits[c].iparams[6] = PBCy;
+	circuits[c].iparams[7] = PBCz;
+    circuits[c].iparams[8] = PBCv;
+	return 0;
+}
+
+double**  i4Dlin_SetUpData(int c, int nx, int ny , int nz, int nv, double dx, double dy, double dz, double dv, double Voffset){
+
+
+	    circuits[c].iparams[1] = nx;//number of points
+	    circuits[c].iparams[2] = ny;
+	    circuits[c].iparams[3] = nz;
+	    circuits[c].iparams[4] = nv;
+
+	    circuits[c].params[0] = dx;//step size
+	    circuits[c].params[1] = dy;
+	    circuits[c].params[2] = dz;
+	    circuits[c].params[3] = dv;
+        circuits[c].params[4] = Voffset;
+
+	    
+
+
+        //Allocate memory
+	   	for (int i = 0; i < circuits[c].iparams[0]; i++) {
+		circuits[c].vpparams[i] = (double*)realloc(circuits[c].vpparams[i],   nv*nx*ny*nz*sizeof(double));
+    }
+
+        //Return pointer back to python to fill the array
+	    return circuits[c].vpparams;
+
+}
+
+void i4Dlin(circuit* c) {
+    double x = GlobalSignals[c->inputs[0]];
+    double y = GlobalSignals[c->inputs[1]];
+    double z = GlobalSignals[c->inputs[2]];
+    double V = GlobalSignals[c->inputs[3]];
+
+    int PBCx = c->iparams[5];
+	int PBCy = c->iparams[6];
+	int PBCz = c->iparams[7];    
+    int PBCv = c->iparams[8];
+
+    int oob = 0;
+
+    if (PBCx =! 1 && x >= c->params[0]*c->iparams[1] || x < 0){
+        oob = 1;
+    }
+
+    if (PBCy =! 1 && y >= c->params[1]*c->iparams[2] || y < 0){
+        oob = 1;
+    }
+
+    if (PBCz != 1 && z <0){
+        oob = 1;
+    }
+
+    if (PBCz != 1 && z >= c->params[2]*c->iparams[3]){
+        for (int comp=0; comp<c->iparams[0]; comp++){
+            
+        GlobalBuffers[c->outputs[comp]] = 0;}
+        return;   
+    }
+
+
+    if (PBCv =! 1 && V >= c->params[3]*c->iparams[4] || V < 0){
+        oob = 1;
+    }
+
+
+    if (oob == 1){
+        printf("WARNING i4Dlin OOB!\n");
+
+        for (int comp=0; comp<c->iparams[0]; comp++){
+        GlobalBuffers[c->outputs[comp]] = 0;}
+        return;
+    }
+
+
+	if (PBCx == 1){
+    //Find box the point is in
+       
+    int BoxNumberx = (int)floor(x/ (c->iparams[1]*c->params[0]) );
+    // x - boxNumber-1 * boxsize 
+    x = x - (BoxNumberx)* (c->iparams[1]*c->params[0]);
+        
+	}
+
+	if (PBCy == 1)	{
+    int BoxNumbery = (int)floor(y/ (c->iparams[2]*c->params[1]) );
+    y = y - (BoxNumbery)* (c->iparams[2]*c->params[1]);
+	}
+
+	if (PBCz == 1){
+    int BoxNumberz = (int)floor(z/ (c->iparams[3]*c->params[2]) );
+    z = z - (BoxNumberz)* (c->iparams[3]*c->params[2]);    
+	}
+
+    if (PBCv == 1){
+    int BoxNumberV = (int)floor(V/ (c->iparams[4]*c->params[3]) );
+    z = z - (BoxNumberV)* (c->iparams[4]*c->params[3]);    
+    }
+
+   
+    //Since the array starts at 0 this is designed to reduce 
+    double Voffset = c->params[4];
+
+    // find lower index points
+    int xo = (int)floor(x/c->params[0]); 
+    int yo = (int)floor(y/c->params[1]); 
+    int zo = (int)floor(z/c->params[2]); 
+    int vo = (int)floor((V-Voffset)/c->params[3]);
+
+   
+    // find upper indexs of points
+    int xi = xo + 1; 
+    int yi = yo + 1; 
+    int zi = zo + 1;     
+    int vi = vo + 1; 
+
+
+    //Find differences
+    double xdo = (x-xo*c->params[0])/(xi*c->params[0]-xo*c->params[0]);
+    double ydo = (y-yo*c->params[1])/(yi*c->params[1]-yo*c->params[1]);
+    double zdo = (z-zo*c->params[2])/(zi*c->params[2]-zo*c->params[2]);
+    double vdo = (V-(vo*c->params[3]+Voffset))/( (vi*c->params[3]+Voffset)-(vo*c->params[3]+Voffset));
+ 
+//    printf("%f %f %f %f \n",V,vo*c->params[3]+Voffset, vi*c->params[3]+Voffset );
+   // printf("%f %f %f\n", xdo,ydo,zdo);
+
+    
+
+
+///////////////////////////////////////////////////////////////////////////////////
+    //Find value for lower field
+
+    //Loop over al components 
+
+    for (int i = 0; i < c->iparams[0]; i++) {
+    //Set up pointer to array
+    double *datao;
+    datao = (double*)c->vpparams[i];
+
+
+    //Index = i + J*sizeI + k*sizei*sizej + V*Vsize
+    int Index000 = xo + yo*c->iparams[1] + zo*c->iparams[1]*c->iparams[2] + vo*c->iparams[1]*c->iparams[2]*c->iparams[3];
+    int Index010 = xo + yi*c->iparams[1] + zo*c->iparams[1]*c->iparams[2] + vo*c->iparams[1]*c->iparams[2]*c->iparams[3];
+    int Index001 = xo + yo*c->iparams[1] + zi*c->iparams[1]*c->iparams[2] + vo*c->iparams[1]*c->iparams[2]*c->iparams[3];
+    int Index011 = xo + yi*c->iparams[1] + zi*c->iparams[1]*c->iparams[2] + vo*c->iparams[1]*c->iparams[2]*c->iparams[3];
+    int Index100 = xi + yo*c->iparams[1] + zo*c->iparams[1]*c->iparams[2] + vo*c->iparams[1]*c->iparams[2]*c->iparams[3];
+    int Index110 = xi + yi*c->iparams[1] + zo*c->iparams[1]*c->iparams[2] + vo*c->iparams[1]*c->iparams[2]*c->iparams[3];
+    int Index101 = xi + yo*c->iparams[1] + zi*c->iparams[1]*c->iparams[2] + vo*c->iparams[1]*c->iparams[2]*c->iparams[3];
+    int Index111 = xi + yi*c->iparams[1] + zi*c->iparams[1]*c->iparams[2] + vo*c->iparams[1]*c->iparams[2]*c->iparams[3];
+
+
+    /*
+    printf("000 %f Line Number %i \n",datao[Index000], Index000+263);
+    printf("010 %f Line Number %i \n",datao[Index010], Index010+263);
+    printf("001 %f Line Number %i \n",datao[Index001], Index001+263);
+    printf("011 %f Line Number %i \n",datao[Index011], Index011+263);   
+    printf("100 %f Line Number %i \n",datao[Index100], Index100+263);
+    printf("110 %f Line Number %i \n",datao[Index110], Index110+263);
+    printf("101 %f Line Number %i \n",datao[Index101], Index101+263);
+    printf("111 %f Line Number %i \n",datao[Index111], Index111+263);
+    */
+
+    double coo = datao[Index000]*(1-xdo) + datao[Index100]*xdo;
+    double cio = datao[Index010]*(1-xdo) + datao[Index110]*xdo;
+    double coi = datao[Index001]*(1-xdo) + datao[Index101]*xdo;
+    double cii = datao[Index011]*(1-xdo) + datao[Index111]*xdo;
+
+    double co = coo*(1-ydo) + cio*ydo;
+    double ci = coi*(1-ydo) + cii*ydo;
+
+    double Field1 = co*(1-zdo) + ci*zdo;
+
+   // printf("%f \n",Field1);
+///////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////////
+
+    //Find value for Upper field
+
+
+
+    //Index = i + J*sizeI + k*sizei*sizej + V*Vsize
+     Index000 = xo + yo*c->iparams[1] + zo*c->iparams[1]*c->iparams[2] + vi*c->iparams[1]*c->iparams[2]*c->iparams[3];
+     Index010 = xo + yi*c->iparams[1] + zo*c->iparams[1]*c->iparams[2] + vi*c->iparams[1]*c->iparams[2]*c->iparams[3];
+     Index001 = xo + yo*c->iparams[1] + zi*c->iparams[1]*c->iparams[2] + vi*c->iparams[1]*c->iparams[2]*c->iparams[3];
+     Index011 = xo + yi*c->iparams[1] + zi*c->iparams[1]*c->iparams[2] + vi*c->iparams[1]*c->iparams[2]*c->iparams[3];
+     Index100 = xi + yo*c->iparams[1] + zo*c->iparams[1]*c->iparams[2] + vi*c->iparams[1]*c->iparams[2]*c->iparams[3];
+     Index110 = xi + yi*c->iparams[1] + zo*c->iparams[1]*c->iparams[2] + vi*c->iparams[1]*c->iparams[2]*c->iparams[3];
+     Index101 = xi + yo*c->iparams[1] + zi*c->iparams[1]*c->iparams[2] + vi*c->iparams[1]*c->iparams[2]*c->iparams[3];
+     Index111 = xi + yi*c->iparams[1] + zi*c->iparams[1]*c->iparams[2] + vi*c->iparams[1]*c->iparams[2]*c->iparams[3];
+
+
+    /*
+    printf("000 %f Line Number %i \n",datao[Index000], Index000 - 9720000 +263);
+    printf("010 %f Line Number %i \n",datao[Index010], Index010 - 9720000 +263);
+    printf("001 %f Line Number %i \n",datao[Index001], Index001 - 9720000 +263);
+    printf("011 %f Line Number %i \n",datao[Index011], Index011 - 9720000 +263);   
+    printf("100 %f Line Number %i \n",datao[Index100], Index100 - 9720000 +263);
+    printf("110 %f Line Number %i \n",datao[Index110], Index110 - 9720000 +263);
+    printf("101 %f Line Number %i \n",datao[Index101], Index101 - 9720000 +263);
+    printf("111 %f Line Number %i \n",datao[Index111], Index111 - 9720000 +263);
+    */
+
+
+     coo = datao[Index000]*(1-xdo) + datao[Index100]*xdo;
+     cio = datao[Index010]*(1-xdo) + datao[Index110]*xdo;
+     coi = datao[Index001]*(1-xdo) + datao[Index101]*xdo;
+     cii = datao[Index011]*(1-xdo) + datao[Index111]*xdo;
+
+     co = coo*(1-ydo) + cio*ydo;
+     ci = coi*(1-ydo) + cii*ydo;
+
+    double Field2 = co*(1-zdo) + ci*zdo;
+
+   // printf("%f \n",Field2);  
+
+///////////////////////////////////////////////////////////////////////////////////
+	//Interpolate across the fields
+    double Field3 = Field1*(1-vdo) + Field2*vdo;
+   // printf("%f %f\n ", Field3, vdo); 
+   GlobalBuffers[c->outputs[i]] = Field3; 
+    }
+
+}

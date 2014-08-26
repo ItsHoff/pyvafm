@@ -115,12 +115,10 @@ class minmax(Circuit):
 
 
 	def Initialize (self):
-
 		pass
 
 	def Update (self):
 		pass
-
 
 
 ## \brief Differentation circuit.
@@ -213,7 +211,6 @@ class integral(Circuit):
 		self.result = 0
 
 	def Initialize (self):
-
 		pass
 
 
@@ -266,17 +263,12 @@ class delay(Circuit):
 		self.SetInputs(**keys)
 
 
-
-
 	def Initialize (self):
 		pass
 
 
-
-
 	def Update (self):
 		pass
-
 
 
 ##\brief Peak Detector circuit.
@@ -332,14 +324,12 @@ class peaker(Circuit):
 		self.SetInputs(**keys)
 
 
-
 	def Initialize (self):
 		pass
 
 
 	def Update (self):
 		pass
-
 
 
 ##\brief Phasor circuit.
@@ -364,7 +354,6 @@ class peaker(Circuit):
 # \endcode
 #
 class phasor(Circuit):
-
 
 	def __init__(self, machine, name, **keys):
 
@@ -438,7 +427,6 @@ class limiter(Circuit):
 
 	def Update (self):
 		pass
-
 
 
 ## \brief Flip circuit.
